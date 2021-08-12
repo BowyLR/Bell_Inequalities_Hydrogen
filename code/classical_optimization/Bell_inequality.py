@@ -1,24 +1,20 @@
 # Importing python packages
 import numpy as np
 
-def calc_inequality_terms(M, var_dict, indices):
-    # Extracting the coefficients and the matrix products
-    coeffs = []
-    M_elements = []
+def calc_Bell_inequality(M_c, coeffs, indices):
+    # Initializing a list containing the products of the correlation matrix
+    M_list = []
 
-    for idx in indices:
-        # Initializing coefficients and matrix products
-        name = ''
+    # Looping over the indices
+    for idxs in indices:
         M_prod = 1
 
-        # Looping over the m measurements
-        for j in range(len(idx)):
-            name += str(idx[j])
-            M_prod *= M[idx[j], j]
+        # Calculating the product of all terms
+        for j in range(len(idxs)):
+            M_prod *= M_c[idxs[j], j]
+        
+        # Adding the terms to M_list
+        M_list.append( M_prod )
 
-        # Storing values
-        coeffs.append(var_dict['c_{'+name+'}'])
-        M_elements.append(M_prod)
-    
-    # Calculating the Bell inequality
-    return np.sum([coeffs[j]*M_elements[j] for j in range(len(indices))])
+    # Calculating the new inequality and returning it
+    return np.sum( [M_list[i] * coeffs[i] for i in range(1, len(coeffs))] )

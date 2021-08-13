@@ -17,7 +17,10 @@ def get_measurement_angles(theta, N, m):
     # Adding the angle between the different parties
     measurement_angles[1:,:] = np.transpose([theta]*m)
 
-    # Adding angles of the measurements of a respectve party
+    # Adding angles of the measurements of a respective party
+    # for j in range(m):
+    #     measurement_angles[:,j] += np.pi/2/(m-1)*(j)
+    
     for j in range(m):
         measurement_angles[:,j] += (j+1)*np.pi/m
 

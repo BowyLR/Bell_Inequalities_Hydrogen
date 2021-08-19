@@ -20,7 +20,7 @@ def get_matrix_form(N, qubit_hamiltonian):
     # Calculating the Hamiltonian
     for key in qubit_hamiltonian.terms.keys():
         # Initializing the indices
-        idx = [0, 0, 0, 0]
+        idx = [0]*N
 
         # Updating the possible indices
         for i in range(len(key)):

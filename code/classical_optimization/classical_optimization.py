@@ -1,5 +1,4 @@
 # Importing python packages
-# import itertools
 # import numpy as np
 from numba import jit
 
@@ -11,7 +10,7 @@ from numba import jit
 def classical_optimization(coeffs, indices, possible_configurations, N, m):
 
     # Initializing the matrix M, 0'th row does not correspond to a measurement
-    M_c = [ [ 1 for _ in range(m+1) ] for _ in range(N) ]
+    M_c = [ [ 1 for _ in range(N) ] for _ in range(m+1) ]  # The plus 1 corresponds to the identity matrix
 
     # Initializing Bell inequality
     I = 1e6
@@ -20,11 +19,10 @@ def classical_optimization(coeffs, indices, possible_configurations, N, m):
     for conf in possible_configurations:
 
         # Updating correlation matrix
-        for i in range(N):
-            for j in range(1, m+1):
-                M_c[i][j] = conf[j-1+i*(N-1)]
+        for i in range(1, m+1):
+            for j in range(N):
+                M_c[i][j] = conf[j+(i-1)*N]
 
-        # Calculating the inequality
         # Initializing a list containing the products of the correlation matrix
         M_list = []
 
@@ -34,8 +32,8 @@ def classical_optimization(coeffs, indices, possible_configurations, N, m):
             M_prod = 1
 
             # Calculating the product of all terms
-            for j in range(N):
-                M_prod *= M_c[j][idxs[j]]
+            for k in range(len(idxs)):
+                M_prod *= M_c[idxs[k]][k]
             
             # Adding the terms to M_list
             M_list.append( M_prod )
@@ -54,14 +52,10 @@ def classical_optimization(coeffs, indices, possible_configurations, N, m):
 
 
 
-
-# def classical_optimization(coeffs, indices, N, m):
+# def classical_optimization(coeffs, indices, possible_configurations, N, m):
 
 #     # Initializing the matrix M, 0'th row does not correspond to a measurement
 #     M_c = np.ones((m+1, N))  
-
-#     # Obtaining all possible configurations of the correlation matrix
-#     possible_configurations = list(itertools.product([1, -1], repeat=m*N))
 
 #     # Initializing Bell inequality
 #     I = 1e6

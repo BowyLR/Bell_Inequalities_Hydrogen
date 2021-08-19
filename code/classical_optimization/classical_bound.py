@@ -1,5 +1,6 @@
 # Importing python functions
-import numpy as np
+import itertools
+import numba as nb
 
 # Importing functions
 from Bell_operator.Bell_operator import get_Bell_terms
@@ -11,7 +12,7 @@ from correlation_matrix.correlation_matrix import get_correlation_matrix
 def calc_classical_bound(theta, H, N, m, basis, extra_Z_gate):
 
     # Obtaining the general correlation matrix
-    M = get_correlation_matrix(theta, N, m, basis=basis, extra_Z_gate=extra_Z_gate)
+    M = get_correlation_matrix(theta, N, m, basis=basis, extra_Z_gate=True)
 
     # Adding one to number of measurements to account for the extra z_gate
     if extra_Z_gate:
@@ -23,5 +24,8 @@ def calc_classical_bound(theta, H, N, m, basis, extra_Z_gate):
     # Calculating the coefficients
     coeffs = get_coefficients(Bell_terms, H, N)
 
+    # Obtaining all possible configurations of the correlation matrix
+    possible_configurations = nb.typed.List(itertools.product([1, -1], repeat=m*N))
+
     # Calculating and returning the classical bound 
-    return classical_optimization(coeffs, indices, N, m)
+    return classical_optimization(coeffs, nb.typed.List(indices), possible_configurations, N, m)

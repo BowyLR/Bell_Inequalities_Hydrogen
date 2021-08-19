@@ -9,24 +9,6 @@ pauli_matrices = [I, X, Y, Z]
 pauli_string = ['I', 'X', 'Y', 'Z']
 
 
-# def get_measurement_angles(theta, N, m):
-
-#     # Initializing the M matrix
-#     measurement_angles = np.zeros((N, m))
-
-#     # Adding the angle between the different parties
-#     measurement_angles[1:,:] = np.transpose([theta]*m)
-
-#     # Adding angles of the measurements of a respective party
-#     # for j in range(m):
-#     #     measurement_angles[:,j] += np.pi/2/(m-1)*(j)
-    
-#     for j in range(m):
-#         measurement_angles[:,j] += (j+1)*np.pi/m
-
-#     return measurement_angles
-
-
 def get_correlation_matrix(theta, N, m, basis='XY', extra_Z_gate=True):
 
     # Returning error in the case where the length of theta does not fit the number of quantum observables

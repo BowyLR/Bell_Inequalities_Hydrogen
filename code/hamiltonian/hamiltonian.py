@@ -12,13 +12,7 @@ from hamiltonian.matrix_hamiltonian import get_matrix_form
 
 class get_hamiltonian():
 
-    def __init__(self, model = 'hydrogen', qubit_transform = 'JW'):
-
-        # Implementing fail safe for unwanted models
-        possible_models = ['XZ', 'hydrogen']
-        if np.sum([(model == j) for j in possible_models]) != 1:
-
-            sys.exit('retrieved '+model+' but this name is incompatible. \nPossible model names are \'XZ\' and \'hydrogen\'')
+    def __init__(self, qubit_transform = 'JW'):
 
         # Implementing fail safe for unwanted models
         possible_qubit_transforms = ['JW', 'BK']

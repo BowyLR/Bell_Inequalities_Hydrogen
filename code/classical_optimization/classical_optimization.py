@@ -1,47 +1,51 @@
 # Importing python packages
 # import numpy as np
-from numba import jit
+import numba as nb
 
 # Importing functions
 # from classical_optimization.Bell_inequality import calc_Bell_inequality
 
 
-@jit(nopython=True) 
+@nb.jit( nopython=True ) 
 def classical_optimization(coeffs, indices, possible_configurations, N, m):
 
     # Initializing the matrix M, 0'th row does not correspond to a measurement
-    M_c = [ [ 1 for _ in range(N) ] for _ in range(m+1) ]  # The plus 1 corresponds to the identity matrix
+    M_c = [ [ nb.types.int64(1) for _ in range(N) ] for _ in range(m+1) ] # Initial column corresponds to the identity matrices
 
     # Initializing Bell inequality
-    I = 1e6
+    I = nb.types.float64( 1e6 )
 
     # Looping over all possible configurations
     for conf in possible_configurations:
-
+        
         # Updating correlation matrix
         for i in range(1, m+1):
+
             for j in range(N):
-                M_c[i][j] = conf[j+(i-1)*N]
+
+                M_c[i][j] = nb.types.int64( conf[j+(i-1)*N] )
 
         # Initializing a list containing the products of the correlation matrix
-        M_list = []
+        M_list = [] 
 
         # Looping over the indices
         for idxs in indices:
 
-            M_prod = 1
+            M_prod = nb.types.int64( 1 )
 
             # Calculating the product of all terms
-            for k in range(len(idxs)):
+            for k in range( len(idxs) ):
+
                 M_prod *= M_c[idxs[k]][k]
             
             # Adding the terms to M_list
             M_list.append( M_prod )
 
         # Calculating the new inequality
-        I_new = 0
+        I_new = nb.types.float64( 0 )
         for i in range( len(coeffs) ):
-            I_new += M_list[i] * coeffs[i]
+            
+            I_new +=  M_list[i] * nb.types.float64( coeffs[i] ) 
 
         # Checking if we have a new minimum
         if I_new < I:

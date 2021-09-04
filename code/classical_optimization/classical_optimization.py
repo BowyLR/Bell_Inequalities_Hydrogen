@@ -1,16 +1,12 @@
 # Importing python packages
-# import numpy as np
 import numba as nb
-
-# Importing functions
-# from classical_optimization.Bell_inequality import calc_Bell_inequality
 
 
 @nb.jit( nopython=True ) 
 def classical_optimization(coeffs, indices, possible_configurations, N, m):
 
     # Initializing the matrix M, 0'th row does not correspond to a measurement
-    M_c = [ [ nb.types.int64(1) for _ in range(N) ] for _ in range(m+1) ] # Initial column corresponds to the identity matrices
+    M_c = [ [ nb.types.int64(1) for _ in range(m[i]+1) ] for i in range(N) ] # Initial column corresponds to the identity matrices
 
     # Initializing Bell inequality
     I = nb.types.float64( 1e6 )
@@ -19,11 +15,16 @@ def classical_optimization(coeffs, indices, possible_configurations, N, m):
     for conf in possible_configurations:
         
         # Updating correlation matrix
-        for i in range(1, m+1):
+        counter = 0
+        for i in range(N):
 
-            for j in range(N):
+            for j in range(1, m[i]+1):
 
-                M_c[i][j] = nb.types.int64( conf[j+(i-1)*N] )
+                # Adding possible configuration
+                M_c[i][j] = nb.types.int64( conf[counter] )
+
+                # Updating the counter
+                counter += 1
 
         # Initializing a list containing the products of the correlation matrix
         M_list = [] 
@@ -34,9 +35,9 @@ def classical_optimization(coeffs, indices, possible_configurations, N, m):
             M_prod = nb.types.int64( 1 )
 
             # Calculating the product of all terms
-            for k in range( len(idxs) ):
+            for k in range(N):
 
-                M_prod *= M_c[idxs[k]][k]
+                M_prod *= M_c[k][idxs[k]]
             
             # Adding the terms to M_list
             M_list.append( M_prod )
@@ -53,31 +54,6 @@ def classical_optimization(coeffs, indices, possible_configurations, N, m):
 
     # Returning the lowest Bell inequality
     return I
-
-
-
-# def classical_optimization(coeffs, indices, possible_configurations, N, m):
-
-#     # Initializing the matrix M, 0'th row does not correspond to a measurement
-#     M_c = np.ones((m+1, N))  
-
-#     # Initializing Bell inequality
-#     I = 1e6
-
-#     # Looping over all possible configurations
-#     for conf in possible_configurations:
-#         # Updating correlation matrix
-#         M_c[1:, :] = np.reshape(conf, (m, N))
-
-#         # Calculating the Bell inequality
-#         I_new = calc_Bell_inequality(M_c, coeffs, indices)
-
-#         # Checking if we have a new minimum
-#         if I_new < I:
-#             I = I_new
-
-#     # Returning the lowest Bell inequality
-#     return I
 
 
 

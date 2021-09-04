@@ -1,6 +1,5 @@
 # Importing matplotlib
 import matplotlib.pyplot as plt
-import matplotlib
 
 # Defining scaling factor
 b = 1.25
@@ -13,9 +12,6 @@ BIGGER_SIZE = 12 * b
 # Defining figure properties
 lwidth = 6.202
 markersize = 4
-
-# Defining 1/quantized conductance
-R_K = 25812.8
 
 # Initializing the standard figure parameters
 fig_params = {
@@ -32,5 +28,6 @@ fig_params = {
 # Updating aixs properties
 plt.rcParams.update(fig_params)
 
-# Setting directory for figures
-save_dir = '../data/figures/'
+# Setting directory for figures and files
+save_fig_dir = '../data/figures/'
+save_file_dir = '../data/data_sets/'

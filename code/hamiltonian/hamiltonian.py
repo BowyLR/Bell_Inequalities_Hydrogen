@@ -2,9 +2,6 @@
 import numpy as np
 from openfermion.transforms import jordan_wigner, bravyi_kitaev
 
-# Importing pauli matrices
-from pauli_matrices.pauli_matrices import I, X, Y, Z
-
 # Importing functions
 from hamiltonian.fermionic_hamiltonian import get_fermionic_hamiltonian
 from hamiltonian.matrix_hamiltonian import get_matrix_form
@@ -32,8 +29,22 @@ class get_hamiltonian():
         elif qubit_transform == possible_qubit_transforms[1]:
             self.qubit_hamiltonian = bravyi_kitaev(self.fermionic_hamiltonian)
 
+        # Initializing the qmaximum and minimum indices of the qubits
+        min_arg = 1e6
+        max_arg = 0
+
+        # Looping over the keys
+        for key in self.qubit_hamiltonian.terms.keys():
+            
+            for j in key:
+
+                if j[0] > max_arg:
+                    max_arg = j[0]
+                if j[0] < min_arg:
+                    min_arg = j[0]
+
         # Obtaining the number of qubits in the Hamiltonian
-        self.N = self.qubit_hamiltonian.many_body_order()
+        self.N = max_arg - min_arg + 1   # The plus 1 corresponds to accounting for the lowest index as well
 
         # Obtaining the matrix form of the Hamiltonian
         self.matrix_form = get_matrix_form(self.N, self.qubit_hamiltonian)

@@ -2,7 +2,7 @@
 import numpy as np
 
 # Importing function which creates angles
-from correlation_matrix.measurement_angles import get_measurement_angles
+from quantum_observables.measurement_angles import get_measurement_angles
 
 # Importing Pauli matrices
 from pauli_matrices.pauli_matrices import I, X, Y, Z
@@ -12,8 +12,46 @@ pauli_matrices = [I, X, Y, Z]
 pauli_string = ['I', 'X', 'Y', 'Z']
 
 
-def get_correlation_matrix(theta, N, m, basis='XY', extra_gate=True):
+def get_quantum_observables(theta, N, m, basis='XY', extra_gate=True):
     
+    r""" 
+        Obtains the quantum observables.    
+        First calculates the angles of the first measurements of each party relative to the first measurement of the first party
+        with the get_measurement_angles function.
+        The angles per party are as follows:
+            theta = j*pi/m+theta,
+        where 0<=j<m is the jth measurement of a given party and theta is an angle relative to the first party.
+        With these angles, it constructs the quantum observables for the elements in the basis by rotating around the plane 
+        denoted by the basis.
+        Lastly, it adds an extra observable in the direction not present in the basis if extra_gate=True.
+
+        
+        Parameters
+        ----------
+        theta: list
+            angle between the first measurement of each party relative to the first measurement of the zeroth party.
+            should be of the length of N-1.
+        N: integer
+            number of parties
+        m: list
+            number of measurements per party.
+            the length of m should be the same as the number of parties for the function to work
+        basis (optional): string
+            basis in which we perform our measurements
+            should be of length 2 and one can only choose from the X, Y or Z basis.
+            e.g. 'XY' is a valid option for basis, but 'Z' is not
+        extra_gate (optional): boolean
+            determines if we should add an extra gate to the measurements which is not present in the basis.
+            e.g. is basis is 'XY' and extra_gate is True, we add an extra measurement in the Z direction.
+        
+          
+        Returns:
+        --------
+        M: list
+            matrix containing the quantum observables of each party.
+            zeroth element is the identity matrix
+    """
+
     # Returning valueerror if needed
     if (type(theta) == float or type(theta) ==  int):
         if N != 2:

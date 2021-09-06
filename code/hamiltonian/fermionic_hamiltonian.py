@@ -14,10 +14,37 @@ delete_output = True
 
 def get_fermionic_hamiltonian(geometry, basis, multiplicity, charge):
 
+    r""" 
+        Calculates the Hamiltonian in terms of fermionic CAPs for a given input geometry,
+        basis from which we approximate the atomic orbitals, multiplicity and charge.
+        It uses the openfermioncpyscf package for this.
+        For more information, see their documentation on how to use this package.
+        We remove the electrostatic repulsion between the nuclei from the Hamiltonian,
+        such that the Hamiltonian is in line with the literature.
+
+        
+        Parameters
+        ----------
+        geometry: list
+            contains the atoms included in the molecule alongside with their respective cartesian coordinates
+        basis: string
+            basis which we use to approximate the atomic orbitals
+            see https://github.com/pyscf/pyscf/tree/master/pyscf/gto/basis for all possible basis.
+        multiplicity: integer
+            spin multiplicity
+        charge: integer
+            charge of the molecule in e
+        
+          
+        Returns:
+        --------
+        fermionic_hamiltonian: object
+            Hamiltonian in terms of the fermionic CAPs without the electrostatic repulsion of the nuclei.
+    """
+
     # Defining the molecule
-    description = str(charge)
     mol = MolecularData(geometry, basis, multiplicity,
-                         charge, description)
+                         charge, geometry[-1][-1][-1])
 
     # Running pyscf
     molecule = run_pyscf(mol,

@@ -15,6 +15,33 @@ pauli_strings = ['I', 'X', 'Y', 'Z']
 
 def get_matrix_form(N, qubit_hamiltonian, num_qubits=[]):
     
+    r""" 
+        Converts the qubit_hamiiltonian, which is a dictionary in terms of qubit, to its matrix form.
+        It does this by obtaining the keys from the dictionary.
+        These posses the gates applied to which qubits, essentially forming a pauli chain.
+        we use this to construct the kronecker product of the pauli chain.
+        this is done for all keys and added to an empty array.
+
+        
+        Parameters
+        ----------
+        N: integer
+            number of parties
+        qubit_hamiltonian: dictionary
+            dictionary of the pauli chains with theor respective coefficients
+        num_qubits (optional): integer
+            maximum number of qubits allowed for the many-body terms
+            should always be equal or smaller to the number of parties N
+            if empty, num_qubits is equal to the number of parties N
+        
+          
+        Returns:
+        --------
+        H: numpy array
+            2^N x 2^N numpy array
+            Hamiltonian describing the system
+    """
+
     # Initializing the Hamiltonian
     H = np.zeros( (2**N, 2**N) )
 

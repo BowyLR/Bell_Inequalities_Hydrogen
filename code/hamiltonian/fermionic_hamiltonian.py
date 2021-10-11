@@ -44,7 +44,8 @@ def get_fermionic_hamiltonian(geometry, basis, multiplicity, charge):
 
     # Defining the molecule
     mol = MolecularData(geometry, basis, multiplicity,
-                         charge, geometry[-1][-1][-1])
+                         charge, str(geometry[-1][-1][-1])
+        )
 
     # Running pyscf
     molecule = run_pyscf(mol,

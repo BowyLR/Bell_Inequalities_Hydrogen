@@ -58,14 +58,14 @@ def figure_1():
     starts = []
     for j in range(len(n)-1):
         if beta_C[j]-beta_C[j+1] > .1:
-            starts.append(n[j])
+            starts.append(n[j]+1)
 
     # Initlazing the text locations and linewidth 
     x = -10
     lw = .75
 
     # initializing figures
-    fig =plt.figure(figsize=(1/0.75 * lwidth, 1/0.85 * lwidth/2))
+    fig = plt.figure(figsize=(1/0.75 * lwidth, 1/0.85 * lwidth/2))
     gs = gridspec.GridSpec(
         nrows=1,
         ncols=2,
@@ -153,13 +153,13 @@ def figure_2():
     # Calculating eigenvalue of the Bell operator
     beta_Q = calc_Bell_operator(theta, H, rho, N, m, basis, extra_gate)
 
-
     # Initlazing the text locations and linewidth
     x_2 = -12
     x_1 = -17
     lw = .75
     y_1 = -1.785
-    scale = 1.3
+    # scale = 1.3
+    scale = 1
 
     # Loading Jordan-Wigner data
     beta_C_JW = np.load(save_file_dir+'hydrogen_mol/beta_C_JW.npy')
@@ -173,7 +173,7 @@ def figure_2():
     n_BK = np.linspace(1, len(beta_C_BK), len(beta_C_BK))
 
     # initializing figures
-    fig =plt.figure(figsize=(1/0.75 * lwidth/scale, 1/0.85 * lwidth/scale))
+    fig = plt.figure(figsize=(1/0.75 * lwidth/scale, 1/0.85 * lwidth/scale))
     gs = gridspec.GridSpec(
         nrows=2,
         ncols=2,
@@ -239,7 +239,7 @@ def figure_2():
     # Plotting angles of the BK transform
     ax = fig.add_subplot(gs[1, 1])
     for j in range(3):
-        ax.plot(n_BK, np.array(angles_BK)[:,j], label=r'$\theta^{(' +str(j)+')}$', linewidth=lw)
+        ax.plot(n_BK, np.array(angles_BK)[:,j], label=r'$\theta^{(' +str(j+1)+')}$', linewidth=lw)
     lines = [43, 78, 121, 165]
     for j in lines:
         ax.axvline(j, color='k', linestyle='--', alpha=.2)
@@ -260,7 +260,6 @@ def figure_2():
 
 
 def figure_3():
-
     # Set parameters to make a simple molecule.
     geometry = [('H', (0., 0., 0.)), ('H', (0., 0., .7414))] # in Angstroms
     basis = 'sto-3G'
@@ -285,6 +284,7 @@ def figure_3():
     psi_G[:,0] = eig_vecs[:,0]
     rho = np.matmul(psi_G, np.transpose(psi_G))
 
+
     # Defining small error
     eps = 1e-3
 
@@ -303,6 +303,7 @@ def figure_3():
 
     # Initlazing the text locations and linewidth
     x = -10
+    y = -1.83
     lw = .75
 
     # initializing figures
@@ -324,13 +325,19 @@ def figure_3():
 
     # Plotting the Jordan-Wigner data
     ax = fig.add_subplot(gs[0, 0])
-    ax.plot(np.linspace(1, len(beta_C), len(beta_C)) , -beta_C , label=r'$n_{m=3} = 0$', linewidth=lw)
-    ax.plot(np.linspace(1, len(beta_C1), len(beta_C1)) , -beta_C1 , label=r'$n_{m=3} = 1$', linewidth=lw)
-    ax.plot(np.linspace(1, len(beta_C2), len(beta_C2)) , -beta_C2 , label=r'$n_{m=3} = 2$', linewidth=lw)
-    ax.plot(np.linspace(1, len(beta_C3), len(beta_C3)) , -beta_C3 , label=r'$n_{m=3} = 3$', linewidth=lw)
+    ax.plot(np.linspace(1, len(beta_C), len(beta_C)) , beta_C , label=r'$n_{m=3} = 0$', linewidth=lw)
+    ax.plot(np.linspace(1, len(beta_C1), len(beta_C1)) , beta_C1 , label=r'$n_{m=3} = 1$', linewidth=lw)
+    ax.plot(np.linspace(1, len(beta_C2), len(beta_C2)) , beta_C2 , label=r'$n_{m=3} = 2$', linewidth=lw)
+    ax.plot(np.linspace(1, len(beta_C3), len(beta_C3)) , beta_C3 , label=r'$n_{m=3} = 3$', linewidth=lw)
+    ax.plot(
+        np.linspace(1, len(beta_C3), len(beta_C3)), np.ones(len(beta_C3))*beta_Q, 'k',
+        label=r'$\mathrm{Tr}\left( \mathcal{H} \rho \right)$', linewidth=lw
+    )
     ax.set_xlabel(r'Iteration number')
     ax.set_xlim((1, 200))
-    ax.text(x, 2.003, '$\mathbf{a}$',  size = MEDIUM_SIZE)
+    ax.set_ylim((-2.02, -1.84))
+    # ax.set_ylabel(r'$-\beta_C$')
+    ax.text(x, y, '$\mathbf{a}$',  size = MEDIUM_SIZE)
 
     # Loading Bravyi-Kitaev data
     beta_C = np.load(save_file_dir+'hydrogen_mol/beta_C_BK.npy')
@@ -340,14 +347,19 @@ def figure_3():
 
     # Plotting the Bravyi-Kitaev data
     ax = fig.add_subplot(gs[0, 1])
-    ax.plot(np.linspace(1, len(beta_C), len(beta_C)) , -beta_C , label=r'$n_{m=3} = 0$', linewidth=lw)
-    ax.plot(np.linspace(1, len(beta_C1), len(beta_C1)) , -beta_C1 , label=r'$n_{m=3} = 1$', linewidth=lw)
-    ax.plot(np.linspace(1, len(beta_C2), len(beta_C2)) , -beta_C2 , label=r'$n_{m=3} = 2$', linewidth=lw)
-    ax.plot(np.linspace(1, len(beta_C3), len(beta_C3)) , -beta_C3 , label=r'$n_{m=3} = 3$', linewidth=lw)
-    ax.legend()
+    ax.plot(np.linspace(1, len(beta_C), len(beta_C)) , beta_C , label=r'$-\beta_C(n_m = 0)$', linewidth=lw)
+    ax.plot(np.linspace(1, len(beta_C1), len(beta_C1)) , beta_C1 , label=r'$-\beta_C(n_m = 1)$', linewidth=lw)
+    ax.plot(np.linspace(1, len(beta_C2), len(beta_C2)) , beta_C2 , label=r'$-\beta_C(n_m = 2)$', linewidth=lw)
+    ax.plot(np.linspace(1, len(beta_C3), len(beta_C3)) , beta_C3 , label=r'$-\beta_C(n_m = 3)$', linewidth=lw)
+    ax.plot(
+        np.linspace(1, len(beta_C3), len(beta_C3)), np.ones(len(beta_C3))*beta_Q, 'k',
+        label=r'$\mathrm{Tr}\left( \mathcal{H} \rho \right)$', linewidth=lw
+    )
+    ax.legend(loc='best', bbox_to_anchor=(0.5,0.45))
     ax.set_xlabel(r'Iteration number')
     ax.set_xlim((1, 200)) 
-    ax.text(x, 2.015, '$\mathbf{b}$',  size = MEDIUM_SIZE)
+    ax.set_ylim((-2.02, -1.84))
+    ax.text(x, y, '$\mathbf{b}$',  size = MEDIUM_SIZE)
 
     # Saving the figure
-    fig.savefig(save_file_dir+'hydrogen_mol/results_hydrogen_varying_m.png', dpi = 300, bbox_inches='tight')   
+    fig.savefig(save_fig_dir+'hydrogen_mol/results_hydrogen_varying_m.png', dpi = 300, bbox_inches='tight')   
